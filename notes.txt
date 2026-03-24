@@ -1,0 +1,2 @@
+scale = 23.0
+offset = 2.0
