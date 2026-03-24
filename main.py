@@ -11,6 +11,7 @@ import copy
 
 from utils.import_manager import importer_image_tk, info_extract_courbe_numerique
 from utils.correction_manager import inv_correct, correct, calc_erreur, erreur_minim
+from utils.style_manager import StyleManager # Importe ton nouveau fichier
 
 
 class une_courbe_affiche(tk.Frame):
@@ -640,6 +641,11 @@ class appReglageParamsCorrectEmpririque(tk.Tk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        #initialisation du style de l'application
+        self.style_app = StyleManager(self)
+        self.style_app.apply_to_root(self)
+
+        
         # Variables
         self.app = AppState()
 
