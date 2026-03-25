@@ -22,6 +22,9 @@ class graphe(tk.Frame):
         self.ax.cla()
         self.ax.set_title("Analyse Granulométrique", fontsize=12, fontweight='bold', pad=15)
         self.ax.grid(True, linestyle='--', alpha=0.6)
+        self.ax.set_xlabel("Ouverture des tamis (mm)", fontsize=10, fontweight='medium')
+        self.ax.set_ylabel("Quantité cumulée (%)", fontsize=10, fontweight='medium')
+        
         
         m_gran = self.app.my_granulos
         dict_infos = {
