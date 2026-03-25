@@ -1,3 +1,5 @@
+"""Main entry point for the CIMES application."""
+
 from src.ui.main_window import CIMESApp
 
 if __name__ == "__main__":

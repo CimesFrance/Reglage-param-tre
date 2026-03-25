@@ -1,4 +1,4 @@
-# Fichier : src/ui/styles.py
+"""Module de gestion des styles de l'application."""
 from tkinter import ttk
 
 class StyleManager:
@@ -6,7 +6,7 @@ class StyleManager:
     BG_MAIN = "#F5F6FA"
     BG_SIDEBAR = "#FFFFFF"
     PRIMARY = "#2C3E50"
-    ACCENT = "#3498DB" 
+    ACCENT = "#3498DB"
     TEXT = "#2F3640"
     BORDER = "#DCDDE1"
 
@@ -19,26 +19,22 @@ class StyleManager:
     def _configure_styles(self):
         self.style.configure("TFrame", background=self.BG_MAIN)
         self.style.configure("Sidebar.TFrame", background=self.BG_SIDEBAR, relief="flat")
-        self.style.configure("TLabel", background=self.BG_MAIN, foreground=self.TEXT, font=("Segoe UI", 10))
-        self.style.configure("Title.TLabel", font=("Segoe UI", 12, "bold"), foreground=self.PRIMARY)
-
-        
+        self.style.configure(
+            "TLabel", background=self.BG_MAIN, foreground=self.TEXT, font=("Segoe UI", 10))
+        self.style.configure(
+            "Title.TLabel", font=("Segoe UI", 12, "bold"), foreground=self.PRIMARY)
         self.style.configure("TButton", font=("Segoe UI", 9, "bold"))
-        self.style.map("TButton", 
-                       background=[('active', self.ACCENT), ('!disabled', self.PRIMARY)], 
-                       foreground=[('!disabled', 'white')])
-
-       
-        # On configure le bouton pour qu'il ait le même fond que la sidebar (Blanc)
-        self.style.configure("Icon.TButton", 
-                             background=self.BG_SIDEBAR,
-                             borderwidth=0, 
-                             relief="flat",
-                             focuscolor="none", 
-                             padding=0) 
-
-        # On configure l'effet au survol
-        self.style.map("Icon.TButton", 
+        self.style.map(
+            "TButton", background=[('active', self.ACCENT), 
+            ('!disabled', self.PRIMARY)], foreground=[('!disabled', 'white')])
+        self.style.configure("" \
+                "Icon.TButton", 
+                background=self.BG_SIDEBAR,
+                borderwidth=0, relief="flat",
+                focuscolor="none",
+                padding=0)
+        #configuration du hover
+        self.style.map("Icon.TButton",
                        background=[('active', "#F0F0F0"), ('!disabled', self.BG_SIDEBAR)],
-                       relief=[('pressed', 'flat')]) 
-        # ------------------------------------------------------------------
+                       relief=[('pressed', 'flat')])
+        

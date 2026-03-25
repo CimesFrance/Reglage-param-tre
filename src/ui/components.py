@@ -20,8 +20,8 @@ class une_courbe_affiche(tk.Frame):
         self._une_courbe_frame_GUI()
 
     def _une_courbe_frame_GUI(self):
-        self.color_square = tk.Label(self, bg=self.un_cumul.Color, width=2, relief="flat", state="disabled")
-        self.label_check = ttk.Label(self, text=self.un_cumul.Name, state="disabled")
+        self.color_square = tk.Label(self, bg=self.un_cumul.color, width=2, relief="flat", state="disabled")
+        self.label_check = ttk.Label(self, text=self.un_cumul.name, state="disabled")
         self.check = ttk.Checkbutton(self, variable=self.un_cumul.flag_affichage, command=self.maj_cumul, state="disabled")
         
         self.color_square.pack(side="left", padx=5, pady=2)
