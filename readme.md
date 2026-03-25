@@ -1,8 +1,8 @@
-<<<<<<< HEAD
-# 🔬 CIMES - Ajustement des Paramètres de Correction Granulométrique
-=======
+
+# CIMES - Ajustement des Paramètres de Correction Granulométrique
+
 # Ajustement des Paramètres de Correction Granulométrique
->>>>>>> a46ff051aacab27cd9bb026da6cde12e6ec22834
+
 
 ![Python](https://img.shields.io/badge/python-3.8+-blue.svg)
 ![Tkinter](https://img.shields.io/badge/GUI-Tkinter-orange.svg)
@@ -55,6 +55,9 @@ $$\text{Erreur} = \frac{1}{300} \sum (y_{corrigé} - y_{pratique})^2$$
 1.  **Prérequis** : Assurez-vous d'avoir Python 3.x installé.
 2.  **Installation des dépendances** :
     ```bash
+    git clone git@github.com:CimesFrance/Reglage-param-tre.git
+    ```
+    ```bash
     pip install -r requirements.txt
     ```
 3.  **Lancement** :
@@ -72,8 +75,6 @@ $$\text{Erreur} = \frac{1}{300} \sum (y_{corrigé} - y_{pratique})^2$$
 1.  **Importer** la courbe numérique (Zip) et la courbe de référence (Excel).
 2.  Observer l'**Erreur** initiale affichée dans le module de correction.
 3.  Cliquer sur **"Correction Auto"** pour laisser l'algorithme `minimize` trouver le meilleur compromis mathématique.
-<<<<<<< HEAD
 4.  Ajuster manuellement si nécessaire et **Sauvegarder** les paramètres une fois satisfait.
-=======
-4.  Ajuster manuellement si nécessaire et **Sauvegarder** les paramètres une fois satisfait.
->>>>>>> a46ff051aacab27cd9bb026da6cde12e6ec22834
+
+
