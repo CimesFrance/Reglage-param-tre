@@ -4,7 +4,7 @@ réglage de paramètres granulométriques."""
 import tkinter as tk
 from src.ui.styles import StyleManager
 from src.ui.graph import Graphe
-from src.ui.components import import_granulo_frame, une_courbe_affiche, correct_frame
+from src.ui.components import ImportGranuloFrame, UneCourbeAffiche, CorrectFrame
 from src.core.models import AppState
 from src.utils.importers import importer_image_tk
 
@@ -36,18 +36,18 @@ class CIMESApp(tk.Tk):
         tk.Label(
             sidebar, text="Importation", font=("Segoe UI", 12, "bold"),
               bg="white").pack(anchor="w", pady=(0,10))
-        import_granulo_frame(sidebar, self.state, self.graph_view, 'num').pack(fill="x", pady=5)
-        import_granulo_frame(sidebar, self.state, self.graph_view, 'tamis').pack(fill="x", pady=5)
+        ImportGranuloFrame(sidebar, self.state, self.graph_view, 'num').pack(fill="x", pady=5)
+        ImportGranuloFrame(sidebar, self.state, self.graph_view, 'tamis').pack(fill="x", pady=5)
         tk.Frame(sidebar, height=1, bg="#DCDDE1").pack(fill="x", pady=15)
         # Gestion des courbes
         tk.Label(
             sidebar, text="Gestion des Courbes", font=("Segoe UI", 12, "bold"),
               bg="white").pack(anchor="w", pady=(0,10))
-        une_courbe_affiche(sidebar, self.state.my_granulos.num, self.graph_view).pack(fill="x")
-        une_courbe_affiche(
+        UneCourbeAffiche(sidebar, self.state.my_granulos.num, self.graph_view).pack(fill="x")
+        UneCourbeAffiche(
             sidebar, self.state.my_granulos.originale, self.graph_view).pack(fill="x")
-        une_courbe_affiche(sidebar, self.state.my_granulos.prat, self.graph_view).pack(fill="x")
+        UneCourbeAffiche(sidebar, self.state.my_granulos.prat, self.graph_view).pack(fill="x")
         tk.Frame(sidebar, height=1, bg="#DCDDE1").pack(fill="x", pady=15)
         # Correction
-        correct_frame(sidebar, self.state, self.graph_view).pack(fill="x")
+        CorrectFrame(sidebar, self.state, self.graph_view).pack(fill="x")
         
