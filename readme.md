@@ -1,9 +1,6 @@
 
 # CIMES - Ajustement des Paramètres de Correction Granulométrique
 
-# Ajustement des Paramètres de Correction Granulométrique
-
-
 ![Python](https://img.shields.io/badge/python-3.8+-blue.svg)
 ![Tkinter](https://img.shields.io/badge/GUI-Tkinter-orange.svg)
 ![SciPy](https://img.shields.io/badge/Library-SciPy-green.svg)
