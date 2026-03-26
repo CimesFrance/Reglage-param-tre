@@ -1,6 +1,7 @@
 """Module principal de l'application de 
 réglage de paramètres granulométriques."""
 
+import os
 import tkinter as tk
 from src.ui.styles import StyleManager
 from src.ui.graph import Graphe
@@ -8,11 +9,15 @@ from src.ui.components import ImportGranuloFrame, UneCourbeAffiche, CorrectFrame
 from src.core.models import AppState
 from src.utils.importers import importer_image_tk
 
+
 class CIMESApp(tk.Tk):
     """Creation de la fenetre qui contient la fenetre principale."""
     def __init__(self):
         super().__init__()
         self.title("CIMES - Correction Granulométrique")
+        self.iconbitmap(
+            "../assets/icons/webhook.ico", 
+            default=os.path.join(os.getcwd(), "assets/icons/webhook.ico"))
         self.geometry("1100x800")
         self.state = AppState()
         self.style_manager = StyleManager(self)
