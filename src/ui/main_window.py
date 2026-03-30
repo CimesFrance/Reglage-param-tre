@@ -6,7 +6,8 @@ import tkinter as tk
 from tkinter import ttk
 from src.ui.styles import StyleManager
 from src.ui.graph import Graphe
-from src.ui.components import ImportGranuloFrame, UneCourbeAffiche, CorrectFrame
+from src.ui.components import ImportGranuloFrame, UneCourbeAffiche
+from src.ui.correction_panel import CorrectFrame
 from src.core.models import AppState
 from src.utils.importers import importer_image_tk
 
