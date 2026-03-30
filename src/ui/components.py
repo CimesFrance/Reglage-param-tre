@@ -1,13 +1,26 @@
 """Module de définition des composants graphiques pour
  l'application de réglage de paramètres granulométriques."""
 
+import os
 import tkinter as tk
-from tkinter import ttk, filedialog
+from tkinter import ttk, filedialog, messagebox
 import pandas as pd
 import numpy as np
 from scipy.optimize import minimize
 from src.core.engine import correct, inv_correct, calc_erreur, erreur_minim
 from src.utils.importers import info_extract_courbe_numerique, importer_image_tk
+
+PARAM_FILE_PATH = "mesure/params_correction.txt"
+
+def _update_global_error(app):
+    """Met à jour le calcul de l'erreur globale entre la courbe numérique et pratique."""
+    if app.my_granulos.num.granulo and app.my_granulos.prat.granulo:
+        err = calc_erreur(np.array(app.my_granulos.num.granulo["x_axis"]),
+                          np.array(app.my_granulos.num.granulo["y_axis"]),
+                          np.array(app.my_granulos.prat.granulo["x_axis"]),
+                          np.array(app.my_granulos.prat.granulo["y_axis"]))
+        app.erreur.set(str(err))
+        app.flag_affiche_erreur.set(True)
 
 class UneCourbeAffiche(tk.Frame):
     """Composant pour afficher une courbe dans la sidebar 
@@ -89,7 +102,6 @@ class ImportGranuloFrame(ttk.Frame):
                     self.app.show_param_nv.set(True)
                     self.app.flag_affiche_btn_sauvegarde.set(True)
                 except Exception as e:
-                    import tkinter.messagebox as messagebox
                     messagebox.showerror("Erreur d'import", f"Le fichier ZIP sélectionné est invalide ou illisible.\n\nDétails : {e}")
                     return
         else:
@@ -101,16 +113,10 @@ class ImportGranuloFrame(ttk.Frame):
                         'x_axis': df.iloc[:,0].tolist(), 'y_axis': df.iloc[:,1].tolist()}
                     self.app.my_granulos.prat.show_courbe_elt.set(True)
                 except Exception as e:
-                    import tkinter.messagebox as messagebox
                     messagebox.showerror("Erreur d'import", f"Impossible de lire ce fichier Excel. Vérifiez qu'il n'est pas déjà ouvert.\n\nDétails : {e}")
                     return
-        if self.app.my_granulos.num.granulo and self.app.my_granulos.prat.granulo:
-            err = calc_erreur(np.array(self.app.my_granulos.num.granulo["x_axis"]),
-                             np.array(self.app.my_granulos.num.granulo["y_axis"]),
-                             np.array(self.app.my_granulos.prat.granulo["x_axis"]),
-                             np.array(self.app.my_granulos.prat.granulo["y_axis"]))
-            self.app.erreur.set(str(err))
-            self.app.flag_affiche_erreur.set(True)
+        
+        _update_global_error(self.app)
         self.graphe._maj_cumuls()
 
 
@@ -164,16 +170,10 @@ class BarreCorrectFrameNv(ttk.Frame):
             self.app.my_granulos.num.granulo["x_axis"] = correct(
                 orig["x_axis"], scale, offset)
             # Recalcul de l'erreur
-            if prat:
-                err = calc_erreur(np.array(self.app.my_granulos.num.granulo["x_axis"]),
-                                 np.array(self.app.my_granulos.num.granulo["y_axis"]),
-                                 np.array(prat["x_axis"]), np.array(prat["y_axis"]))
-                self.app.erreur.set(str(err))
+            _update_global_error(self.app)
             self.graphe._maj_cumuls()
         except ValueError:
-            import tkinter.messagebox as messagebox
             messagebox.showwarning("Format invalide", "Veuillez entrer des chiffres valides pour le Scale et l'Offset (ex: 1.25).", parent=self)
-            print("Erreur : Valeurs de scale/offset invalides")
 
 class CorrectFrame(ttk.Frame):
     """Conteneur global pour la zone de correction """
@@ -224,32 +224,44 @@ class CorrectFrame(ttk.Frame):
     def _auto(self):
         orig = self.app.my_granulos.originale.granulo
         prat = self.app.my_granulos.prat.granulo
-        res = minimize(erreur_minim, [1.0, 0.0],
-                       args=(np.array(orig["x_axis"]), np.array(orig["y_axis"]),
-                             np.array(prat["x_axis"]), np.array(prat["y_axis"])),
-                       bounds=[(1e-6, None), (None, None)])
-        s, o = res.x
-        self.app.var_correct["var_nv"]["scale"].set(str(round(s, 3)))
-        self.app.var_correct["var_nv"]["offset"].set(str(round(o, 3)))
-        # Appliquer le résultat
-        self.app.my_granulos.num.granulo["x_axis"] = correct(orig["x_axis"], s, o)
-        # Recalcul erreur
-        err = calc_erreur(np.array(self.app.my_granulos.num.granulo["x_axis"]),
-                         np.array(self.app.my_granulos.num.granulo["y_axis"]),
-                         np.array(prat["x_axis"]), np.array(prat["y_axis"]))
-        self.app.erreur.set(str(err))
-        self.graphe._maj_cumuls()
+        
+        # Vérification indispensable avant de lancer les calculs
+        if orig is None or prat is None:
+            messagebox.showwarning("Importation requise", "Veuillez d'abord importer la courbe numérique et la courbe réelle avant de lancer l'auto-ajustement.", parent=self)
+            return
+            
+        try:
+            res = minimize(erreur_minim, [1.0, 0.0],
+                           args=(np.array(orig["x_axis"]), np.array(orig["y_axis"]),
+                                 np.array(prat["x_axis"]), np.array(prat["y_axis"])),
+                           bounds=[(1e-6, None), (None, None)])
+            s, o = res.x
+            self.app.var_correct["var_nv"]["scale"].set(str(round(s, 3)))
+            self.app.var_correct["var_nv"]["offset"].set(str(round(o, 3)))
+            # Appliquer le résultat
+            self.app.my_granulos.num.granulo["x_axis"] = correct(orig["x_axis"], s, o)
+            # Recalcul erreur
+            _update_global_error(self.app)
+            self.graphe._maj_cumuls()
+        except Exception as e:
+            messagebox.showerror("Échec de l'optimisation", f"L'algorithme de calcul n'a pas pu faire converger les deux courbes.\n\nDétails : {e}", parent=self)
 
     def _save_params(self):
         try:
             scale_val = self.app.var_correct["var_nv"]["scale"].get()
             offset_val = self.app.var_correct["var_nv"]["offset"].get()
             
-            import os
-            path = "mesure/params_correction.txt"
-            os.makedirs(os.path.dirname(path), exist_ok=True)
+            # Validation avant sauvegarde
+            try:
+                float(scale_val)
+                float(offset_val)
+            except ValueError:
+                messagebox.showwarning("Format invalide", "Valeurs de Scale ou Offset incorrectes. entrez une valeur de type int ou float.", parent=self)
+                return
+
+            os.makedirs(os.path.dirname(PARAM_FILE_PATH), exist_ok=True)
             
-            with open(path, "w", encoding="utf-8") as f:
+            with open(PARAM_FILE_PATH, "w", encoding="utf-8") as f:
                 f.write(f"Scale = {scale_val}\nOffset = {offset_val}\n")
                 
             self.lbl_save_info.config(
@@ -260,11 +272,9 @@ class CorrectFrame(ttk.Frame):
             self.lbl_save_info.config(text=f"Erreur de sauvegarde", foreground="#E74C3C")
 
     def _load_saved_params(self):
-        import os
-        path = "mesure/params_correction.txt"
-        if os.path.exists(path):
+        if os.path.exists(PARAM_FILE_PATH):
             try:
-                with open(path, "r", encoding="utf-8") as f:
+                with open(PARAM_FILE_PATH, "r", encoding="utf-8") as f:
                     lines = f.readlines()
                 scale_val, offset_val = "1.0", "0.0"
                 for line in lines:
