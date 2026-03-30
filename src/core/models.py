@@ -22,7 +22,7 @@ class MesCumuls:
         self.num = Cumul(
             name="Courbe numérique corrigée", color='#E74C3C', logo=importer_image_tk(
                 "photo camera.png"))
-        self.originale = Cumul(name="Courbe numérique originale", color='#34495E')
+        self.originale = Cumul(name="Courbe numérique originale", color='#F1C40F')
         self.prat = Cumul(
             name="Courbe réelle tamisée", color='#27AE60', logo=importer_image_tk("logo tamis.png"))
 

@@ -14,7 +14,7 @@ class UneCourbeAffiche(tk.Frame):
     avec son nom et une case à cocher pour l'affichage"""
 
     def __init__(self, parent, un_cumul, graphe, *args, **kwargs):
-        super().__init__(parent, bg="white", *args, **kwargs)
+        super().__init__(parent, bg=parent["bg"], *args, **kwargs)
         self.un_cumul = un_cumul
         self.graphe = graphe
         self.un_cumul.show_courbe_elt.trace_add("write", self.affiche_elt_courbe)
@@ -24,10 +24,10 @@ class UneCourbeAffiche(tk.Frame):
         self.color_square = tk.Label(
             self, bg=self.un_cumul.color, width=2, relief="flat", state="disabled")
         self.label_check = ttk.Label(
-            self, text=self.un_cumul.name, state="disabled")
+            self, text=self.un_cumul.name, style="Sidebar.TLabel", state="disabled")
         self.check = ttk.Checkbutton(
             self, variable=self.un_cumul.flag_affichage,
-            command=self.maj_cumul, state="disabled")
+            command=self.maj_cumul, style="Sidebar.TCheckbutton", state="disabled")
         self.color_square.pack(side="left", padx=5, pady=2)
         self.label_check.pack(side="left", padx=5, expand=True, fill="x")
         self.check.pack(side="right", padx=5)
@@ -58,6 +58,7 @@ class ImportGranuloFrame(ttk.Frame):
         logo_ref = self.app.my_granulos.num.logo if self.type == 'num' else self.app.my_granulos.prat.logo
         txt = "Importer Courbe Numérique" if self.type == 'num' else "Importer Courbe Réelle"
         # Ajout explicite du style Sidebar
+        self.columnconfigure(1, weight=1)
         ttk.Label(
             self, image=logo_ref,
             style="Sidebar.TLabel").grid(row=0, column=0, padx=5)
@@ -67,32 +68,42 @@ class ImportGranuloFrame(ttk.Frame):
         ttk.Button(self,
                    image=self.tk_img_dl,
                    command=self._import,
-                   style="Icon.TButton").grid(row=0, column=2, padx=5)
+                   style="Icon.TButton").grid(row=0, column=2, padx=5, sticky='e')
 
     def _import(self):
         if self.type == 'num':
             path = filedialog.askopenfilename(filetypes=[("ZIP", "*.zip")])
             if path:
-                granulo, c_var = info_extract_courbe_numerique(path)
-                self.app.my_granulos.num.granulo = {
-                    'x_axis': granulo["tamis"], 'y_axis': granulo["cumul"]}
-                self.app.var_correct["var_act"]["scale"].set(str(c_var["Scale"]))
-                self.app.var_correct["var_act"]["offset"].set(str(c_var["Offset"]))
-                inv_x = inv_correct(granulo["tamis"], c_var["Scale"], c_var["Offset"])
-                self.app.my_granulos.originale.granulo = {
-                    "x_axis": inv_x, "y_axis": granulo["cumul"]}
-                self.app.show_correct_frame_act.set(True)
-                self.app.my_granulos.num.show_courbe_elt.set(True)
-                self.app.my_granulos.originale.show_courbe_elt.set(True)
-                self.app.show_param_nv.set(True)
-                self.app.flag_affiche_btn_sauvegarde.set(True)
+                try:
+                    granulo, c_var = info_extract_courbe_numerique(path)
+                    self.app.my_granulos.num.granulo = {
+                        'x_axis': granulo["tamis"], 'y_axis': granulo["cumul"]}
+                    self.app.var_correct["var_act"]["scale"].set(str(c_var["Scale"]))
+                    self.app.var_correct["var_act"]["offset"].set(str(c_var["Offset"]))
+                    inv_x = inv_correct(granulo["tamis"], c_var["Scale"], c_var["Offset"])
+                    self.app.my_granulos.originale.granulo = {
+                        "x_axis": inv_x, "y_axis": granulo["cumul"]}
+                    self.app.show_correct_frame_act.set(True)
+                    self.app.my_granulos.num.show_courbe_elt.set(True)
+                    self.app.my_granulos.originale.show_courbe_elt.set(True)
+                    self.app.show_param_nv.set(True)
+                    self.app.flag_affiche_btn_sauvegarde.set(True)
+                except Exception as e:
+                    import tkinter.messagebox as messagebox
+                    messagebox.showerror("Erreur d'import", f"Le fichier ZIP sélectionné est invalide ou illisible.\n\nDétails : {e}")
+                    return
         else:
             path = filedialog.askopenfilename(filetypes=[("Excel", "*.xlsx")])
             if path:
-                df = pd.read_excel(path)
-                self.app.my_granulos.prat.granulo = {
-                    'x_axis': df.iloc[:,0].tolist(), 'y_axis': df.iloc[:,1].tolist()}
-                self.app.my_granulos.prat.show_courbe_elt.set(True)
+                try:
+                    df = pd.read_excel(path)
+                    self.app.my_granulos.prat.granulo = {
+                        'x_axis': df.iloc[:,0].tolist(), 'y_axis': df.iloc[:,1].tolist()}
+                    self.app.my_granulos.prat.show_courbe_elt.set(True)
+                except Exception as e:
+                    import tkinter.messagebox as messagebox
+                    messagebox.showerror("Erreur d'import", f"Impossible de lire ce fichier Excel. Vérifiez qu'il n'est pas déjà ouvert.\n\nDétails : {e}")
+                    return
         if self.app.my_granulos.num.granulo and self.app.my_granulos.prat.granulo:
             err = calc_erreur(np.array(self.app.my_granulos.num.granulo["x_axis"]),
                              np.array(self.app.my_granulos.num.granulo["y_axis"]),
@@ -106,7 +117,7 @@ class ImportGranuloFrame(ttk.Frame):
 class BarreCorrectFrameNv(ttk.Frame):
     """Composant pour la saisie manuelle des nouveaux paramètres"""
     def __init__(self, parent, app, graphe, *args, **kwargs):
-        super().__init__(parent, *args, **kwargs)
+        super().__init__(parent, style="Sidebar.TFrame", *args, **kwargs)
         self.app = app
         self.graphe = graphe
         self.var_nv = app.var_correct['var_nv']
@@ -118,15 +129,16 @@ class BarreCorrectFrameNv(ttk.Frame):
         ttk.Label(
             self,
             text="Paramètres manuels",
+            style="Sidebar.TLabel",
             font=("Segoe UI", 10, "bold")).grid(row=0, column=0, columnspan=3,
                                                 pady=(5,10))
         # Scale
-        ttk.Label(self, text="Scale:").grid(row=1, column=0)
+        ttk.Label(self, text="Scale:", style="Sidebar.TLabel").grid(row=1, column=0)
         self.ent_scale = ttk.Entry(
             self, textvariable=self.var_nv["scale"], width=8)
         self.ent_scale.grid(row=2, column=0, padx=5)
         # Offset
-        ttk.Label(self, text="Offset:").grid(row=1, column=1)
+        ttk.Label(self, text="Offset:", style="Sidebar.TLabel").grid(row=1, column=1)
         self.ent_offset = ttk.Entry(self, textvariable=self.var_nv["offset"], width=8)
         self.ent_offset.grid(row=2, column=1, padx=5)
         # Bouton Valider
@@ -159,25 +171,28 @@ class BarreCorrectFrameNv(ttk.Frame):
                 self.app.erreur.set(str(err))
             self.graphe._maj_cumuls()
         except ValueError:
+            import tkinter.messagebox as messagebox
+            messagebox.showwarning("Format invalide", "Veuillez entrer des chiffres valides pour le Scale et l'Offset (ex: 1.25).", parent=self)
             print("Erreur : Valeurs de scale/offset invalides")
 
 class CorrectFrame(ttk.Frame):
     """Conteneur global pour la zone de correction """
     def __init__(self, parent, app, graphe, *args, **kwargs):
-        super().__init__(parent, *args, **kwargs)
+        super().__init__(parent, style="Sidebar.TFrame", *args, **kwargs)
         self.app = app
         self.graphe = graphe
         self._build_ui()
 
     def _build_ui(self):
-        ttk.Label(self, text="Correction", style="Title.TLabel").pack(pady=(0, 10))
+        ttk.Label(self, text="Correction", style="Sidebar.Title.TLabel").pack(pady=(0, 10))
         # Section Erreur et Auto
-        auto_f = ttk.Frame(self)
+        auto_f = ttk.Frame(self, style="Sidebar.TFrame")
         auto_f.pack(fill="x", pady=5)
-        ttk.Label(auto_f, text="Erreur :").pack(side="left")
+        ttk.Label(auto_f, text="Erreur :", style="Sidebar.TLabel").pack(side="left")
         ttk.Label(
             auto_f,
             textvariable=self.app.erreur,
+            style="Sidebar.TLabel",
             font=("Segoe UI", 10, "bold")).pack(side="left", padx=5)
         self.btn_auto = ttk.Button(auto_f, text="Auto-Ajuster", command=self._auto)
         self.btn_auto.pack(side="right")
@@ -187,8 +202,17 @@ class CorrectFrame(ttk.Frame):
         self.manual_f = BarreCorrectFrameNv(self, self.app, self.graphe)
         self.manual_f.pack(fill="x")
         # Bouton Sauvegarde
-        self.btn_save = ttk.Button(self, text="Sauvegarder Paramètres", state="disabled")
-        self.btn_save.pack(fill="x", pady=15)
+        self.btn_save = ttk.Button(self, text="Sauvegarder Paramètres", command=self._save_params)
+        self.btn_save.config(state="disabled")
+        self.btn_save.pack(fill="x", pady=(15, 5))
+        
+        # Label confirmation sauvegarde
+        self.lbl_save_info = ttk.Label(self, text="", style="Sidebar.TLabel", justify="center")
+        self.lbl_save_info.pack(pady=5)
+        
+        # Charge les paramètres si existants
+        self._load_saved_params()
+        
         # Traces pour l'état des boutons
         self.app.flag_affiche_erreur.trace_add("write", self._toggle_buttons)
 
@@ -215,3 +239,42 @@ class CorrectFrame(ttk.Frame):
                          np.array(prat["x_axis"]), np.array(prat["y_axis"]))
         self.app.erreur.set(str(err))
         self.graphe._maj_cumuls()
+
+    def _save_params(self):
+        try:
+            scale_val = self.app.var_correct["var_nv"]["scale"].get()
+            offset_val = self.app.var_correct["var_nv"]["offset"].get()
+            
+            import os
+            path = "mesure/params_correction.txt"
+            os.makedirs(os.path.dirname(path), exist_ok=True)
+            
+            with open(path, "w", encoding="utf-8") as f:
+                f.write(f"Scale = {scale_val}\nOffset = {offset_val}\n")
+                
+            self.lbl_save_info.config(
+                text=f" Nouveaux paramètres sauvegardés\nScale: {scale_val}  |  Offset: {offset_val}",
+                foreground="#FFFFFF" 
+            )
+        except Exception as e:
+            self.lbl_save_info.config(text=f"Erreur de sauvegarde", foreground="#E74C3C")
+
+    def _load_saved_params(self):
+        import os
+        path = "mesure/params_correction.txt"
+        if os.path.exists(path):
+            try:
+                with open(path, "r", encoding="utf-8") as f:
+                    lines = f.readlines()
+                scale_val, offset_val = "1.0", "0.0"
+                for line in lines:
+                    if line.startswith("Scale"):
+                        scale_val = line.split("=")[1].strip()
+                    elif line.startswith("Offset"):
+                        offset_val = line.split("=")[1].strip()
+                self.lbl_save_info.config(
+                    text=f"Derniers paramètres sauvegardés:\nScale: {scale_val}  |  Offset: {offset_val}",
+                    foreground="#BDC3C7" # Grisé clair
+                )
+            except Exception:
+                pass

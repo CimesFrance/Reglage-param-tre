@@ -4,9 +4,10 @@ from tkinter import ttk
 class StyleManager:
     """Classe pour gérer les styles de l'application."""
     BG_MAIN = "#F5F6FA"
-    BG_SIDEBAR = "#FFFFFF"
+    BG_SIDEBAR = "#2C3E50"
     PRIMARY = "#2C3E50"
-    ACCENT = "#3498DB"
+    ACCENT = "#D35400" 
+    ACCENT_HOVER = "#BA4A00" 
     TEXT = "#2F3640"
     BORDER = "#DCDDE1"
 
@@ -21,12 +22,22 @@ class StyleManager:
         self.style.configure("Sidebar.TFrame", background=self.BG_SIDEBAR, relief="flat")
         self.style.configure(
             "TLabel", background=self.BG_MAIN, foreground=self.TEXT, font=("Segoe UI", 10))
+        self.style.configure("Sidebar.TLabel", background=self.BG_SIDEBAR, foreground="white", font=("Segoe UI", 10))
+        self.style.map("Sidebar.TLabel", 
+                       background=[('disabled', self.BG_SIDEBAR), ('!disabled', self.BG_SIDEBAR)],
+                       foreground=[('disabled', 'white'), ('!disabled', 'white')])
+        self.style.configure("Sidebar.TCheckbutton", background=self.BG_SIDEBAR, foreground="white")
+        self.style.map("Sidebar.TCheckbutton", 
+                       background=[('disabled', self.BG_SIDEBAR), ('!disabled', self.BG_SIDEBAR)],
+                       foreground=[('disabled', 'white'), ('!disabled', 'white')])
         self.style.configure(
             "Title.TLabel", font=("Segoe UI", 12, "bold"), foreground=self.PRIMARY)
+        self.style.configure(
+            "Sidebar.Title.TLabel", background=self.BG_SIDEBAR, font=("Segoe UI", 12, "bold"), foreground="white")
         self.style.configure("TButton", font=("Segoe UI", 9, "bold"))
         self.style.map(
-            "TButton", background=[('active', self.ACCENT), 
-            ('!disabled', self.PRIMARY)], foreground=[('!disabled', 'white')])
+            "TButton", background=[('disabled', "#7F8C8D"), ('active', self.ACCENT_HOVER), 
+            ('!disabled', self.ACCENT)], foreground=[('disabled', '#BDC3C7'), ('!disabled', 'white')])
         self.style.configure("" \
                 "Icon.TButton", 
                 background=self.BG_SIDEBAR,
@@ -35,6 +46,6 @@ class StyleManager:
                 padding=0)
         #configuration du hover
         self.style.map("Icon.TButton",
-                       background=[('active', "#F0F0F0"), ('!disabled', self.BG_SIDEBAR)],
+                       background=[('active', "#34495E"), ('!disabled', self.BG_SIDEBAR)],
                        relief=[('pressed', 'flat')])
         
