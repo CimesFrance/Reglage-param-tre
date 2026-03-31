@@ -6,9 +6,12 @@ import zipfile
 import pandas as pd
 from PIL import Image, ImageTk
 
+
 def importer_image_tk(nom_image, w=24, h=24):
     """Charge une image depuis le dossier assets et la convertit en PhotoImage pour Tkinter."""
-    base_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    base_path = os.path.dirname(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    )
     path = os.path.join(base_path, "assets", "icons", nom_image)
     try:
         img = Image.open(path).resize((w, h), Image.LANCZOS)
@@ -17,8 +20,9 @@ def importer_image_tk(nom_image, w=24, h=24):
         print(f"Erreur lors du chargement de l'image {nom_image} : {e}")
         return None
 
+
 def info_extract_courbe_numerique(zip_file):
-    """Extrait les données de la courbe numérique et les 
+    """Extrait les données de la courbe numérique et les
     paramètres de correction depuis un fichier zip."""
     with zipfile.ZipFile(zip_file, "r") as z:
         with z.open("data.csv") as f:
@@ -29,6 +33,8 @@ def info_extract_courbe_numerique(zip_file):
     for ligne in texte.splitlines():
         if "=" in ligne:
             k, v = ligne.split("=")
-            try: vars_dict[k.strip()] = float(v.strip())
-            except: vars_dict[k.strip()] = v.strip()
-    return {"tamis": df.iloc[:,0].tolist(), "cumul": df.iloc[:,1].tolist()}, vars_dict
+            try:
+                vars_dict[k.strip()] = float(v.strip())
+            except:
+                vars_dict[k.strip()] = v.strip()
+    return {"tamis": df.iloc[:, 0].tolist(), "cumul": df.iloc[:, 1].tolist()}, vars_dict
