@@ -34,7 +34,6 @@ class CIMESApp(tk.Tk):
         )
         sidebar.pack(side="left", fill="y")
         sidebar.pack_propagate(False)
-
         # Graph
         self.graph_view = Graphe(self, self.state)
         self.graph_view.pack(side="right", fill="both", expand=True)

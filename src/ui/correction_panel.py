@@ -165,8 +165,8 @@ class CorrectFrame(ttk.Frame):
         except Exception as e:
             messagebox.showerror(
                 "Échec de l'optimisation",
-                f"L'algorithme de calcul n'a pas pu faire converger"
-                "les deux courbes.\n\nDétails : {e}",
+                f"L'algorithme de calcul n'a pas pu faire converger "
+                f"les deux courbes.\n\nDétails : {e}",
                 parent=self,
             )
 
@@ -195,8 +195,8 @@ class CorrectFrame(ttk.Frame):
 
             self.lbl_save_info.config(
                 text=
-                f" Nouveaux paramètres sauvegardés\nScale: {scale_val}"
-                "|  Offset: {offset_val}",
+                f"Nouveaux paramètres sauvegardés\nScale: {scale_val} "
+                f" |  Offset: {offset_val}",
                 foreground="#FFFFFF",
             )
         except Exception as e:
