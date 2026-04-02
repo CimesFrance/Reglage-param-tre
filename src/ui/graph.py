@@ -2,8 +2,7 @@
 Module de gestion de l'affichage du graphique de granulométrie
 dans l'application.
 Ce module contient la classe graphe, qui est responsable
-de l'affichage et de la mise
-à jour du graphique de granulométrie.
+de l'affichage et de la mise à jour du graphique de granulométrie.
 """
 
 import tkinter as tk

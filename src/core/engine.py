@@ -8,19 +8,16 @@ from scipy.interpolate import interp1d
 
 def inv_correct(tamis_act, scale_act, offset_act):
     """Inverse de la correction granulométrique."""
-
     return list((np.array(tamis_act) - offset_act) / scale_act)
 
 
 def correct(tamis_act, scale_nv, offset_nv):
     """Applique la correction granulométrique."""
-
     return list(np.array(tamis_act) * scale_nv + offset_nv)
 
 
 def calc_erreur(tamis_corrigee, cumulatif_corrigee, tamis_pratique, cumulatif_pratique):
     """Calcul l'erreur entre les courbes corrigées et les courbes pratiques."""
-
     xfine = np.linspace(min(tamis_pratique), max(tamis_pratique), 300)
     exp_interp = interp1d(tamis_pratique, cumulatif_pratique, kind="linear")
     y_exp_interp = exp_interp(xfine)

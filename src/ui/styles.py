@@ -22,7 +22,8 @@ class StyleManager:
         self.style.configure("Sidebar.TFrame", background=self.BG_SIDEBAR, relief="flat")
         self.style.configure(
             "TLabel", background=self.BG_MAIN, foreground=self.TEXT, font=("Segoe UI", 10))
-        self.style.configure("Sidebar.TLabel", background=self.BG_SIDEBAR, foreground="white", font=("Segoe UI", 10))
+        self.style.configure("Sidebar.TLabel", 
+        background=self.BG_SIDEBAR, foreground="white", font=("Segoe UI", 10))
         self.style.map("Sidebar.TLabel", 
                        background=[('disabled', self.BG_SIDEBAR), ('!disabled', self.BG_SIDEBAR)],
                        foreground=[('disabled', 'white'), ('!disabled', 'white')])
@@ -33,11 +34,16 @@ class StyleManager:
         self.style.configure(
             "Title.TLabel", font=("Segoe UI", 12, "bold"), foreground=self.PRIMARY)
         self.style.configure(
-            "Sidebar.Title.TLabel", background=self.BG_SIDEBAR, font=("Segoe UI", 12, "bold"), foreground="white")
+            "Sidebar.Title.TLabel",
+            background=self.BG_SIDEBAR, 
+            font=("Segoe UI", 12, "bold"), 
+            foreground="white")
         self.style.configure("TButton", font=("Segoe UI", 9, "bold"))
         self.style.map(
-            "TButton", background=[('disabled', "#7F8C8D"), ('active', self.ACCENT_HOVER), 
-            ('!disabled', self.ACCENT)], foreground=[('disabled', '#BDC3C7'), ('!disabled', 'white')])
+            "TButton", 
+            background=[('disabled', "#7F8C8D"), ('active', self.ACCENT_HOVER), 
+            ('!disabled', self.ACCENT)], 
+            foreground=[('disabled', '#BDC3C7'), ('!disabled', 'white')])
         self.style.configure("" \
                 "Icon.TButton", 
                 background=self.BG_SIDEBAR,

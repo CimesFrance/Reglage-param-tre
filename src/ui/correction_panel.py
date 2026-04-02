@@ -116,10 +116,8 @@ class CorrectFrame(ttk.Frame):
             self, text="", style="Sidebar.TLabel", justify="center"
         )
         self.lbl_save_info.pack(pady=5)
-
         # Charge les paramètres si existants
         self._load_saved_params()
-
         # Traces pour l'état des boutons
         self.app.flag_affiche_erreur.trace_add("write", self._toggle_buttons)
 
@@ -131,7 +129,6 @@ class CorrectFrame(ttk.Frame):
     def _auto(self):
         orig = self.app.my_granulos.originale.granulo
         prat = self.app.my_granulos.prat.granulo
-
         # Vérification avant de lancer les calculs
         if orig is None or prat is None:
             messagebox.showwarning(
@@ -141,7 +138,6 @@ class CorrectFrame(ttk.Frame):
                 parent=self,
             )
             return
-
         try:
             res = minimize(
                 erreur_minim,
@@ -174,7 +170,6 @@ class CorrectFrame(ttk.Frame):
         try:
             scale_val = self.app.var_correct["var_nv"]["scale"].get()
             offset_val = self.app.var_correct["var_nv"]["offset"].get()
-
             # Validation avant sauvegarde
             try:
                 float(scale_val)

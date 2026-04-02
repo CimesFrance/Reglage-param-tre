@@ -149,6 +149,5 @@ class ImportGranuloFrame(ttk.Frame):
                         f"Vérifiez qu'il n'est pas déjà ouvert.\n\nDétails : {e}",
                     )
                     return
-
         _update_global_error(self.app)
         self.graphe._maj_cumuls()
