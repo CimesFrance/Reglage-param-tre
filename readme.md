@@ -25,13 +25,22 @@
 
 ## Architecture du Code
 
-Le projet est découpé en modules spécialisés pour une meilleure maintenance :
+Le projet suit une architecture modulaire séparant clairement l'interface graphique (UI) de la logique métier (Core), pour une meilleure maintenabilité :
 
-| Fichier | Rôle Principal |
-| :--- | :--- |
-| **`main.py`** | Gère le cycle de vie de l'application, l'interface graphique (Tkinter) et les interactions utilisateur. |
-| **`utils/correction_manager.py`** | Contient le moteur mathématique : fonctions de correction, calcul d'erreur quadratique et algorithme de minimisation. |
-| **`utils/import_manager.py`** | Gère l'extraction des données depuis les archives ZIP et la conversion des formats de fichiers. |
+- **`main.py`** : Point d'entrée de l'application, lance la boucle principale Tkinter.
+- **`src/`** : Code source de l'application divisé en sous-modules :
+  - **`core/`** : Logique métier indépendante de l'interface.
+    - `engine.py` : Moteur mathématique (correction analytique, calcul de l'erreur quadratique, algorithme `minimize`).
+    - `models.py` : Modèles ou structures de données internes.
+  - **`ui/`** : Interface graphique riche et composants visuels.
+    - `main_window.py` : Fenêtre principale qui assemble les différents panneaux.
+    - `correction_panel.py` : Panneau interactif (inputs, boutons de contrôle et champs d'erreur).
+    - `graph.py` : Intégration avancée de la figure Matplotlib dans Tkinter.
+    - `components.py` : Composants réutilisables (boutons stylisés, champs de saisie, etc.).
+    - `styles.py` : Déclaration centralisée des thèmes (Dark Blue, Orange), polices et constantes d'espacement.
+  - **`utils/`** : Fonctions utilitaires transverses.
+    - `importers.py` : Gestion de la lecture et de la conversion des fichiers (Zip, Excel, CSV).
+- **`assets/`** : Répertoire contenant les ressources externes (images, icônes).
 
 ---
 
