@@ -3,8 +3,10 @@
 Ce module contient les classes de données utilisées pour stocker les informations
 sur les cumuls granulométriques, ainsi que l'état global de l'application."""
 
+# pylint: disable=too-few-public-methods
+
 import tkinter as tk
-from src.utils.importers import importer_image_tk
+from src.utils.importers import importer_image_tk  # pylint: disable=import-error
 
 
 class Cumul:

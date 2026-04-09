@@ -1,12 +1,13 @@
 """Module contenant les composants liés à l'interface de correction des paramètres."""
 
+# pylint: disable=too-many-ancestors
+
 import os
-import tkinter as tk
 from tkinter import ttk, messagebox
 import numpy as np
 from scipy.optimize import minimize
-from src.core.engine import correct, calc_erreur, erreur_minim
-from src.ui.components import PARAM_FILE_PATH, _update_global_error
+from src.core.engine import correct, erreur_minim  # pylint: disable=import-error
+from src.ui.components import PARAM_FILE_PATH, _update_global_error  # pylint: disable=import-error
 
 
 class BarreCorrectFrameNv(ttk.Frame):
@@ -43,7 +44,7 @@ class BarreCorrectFrameNv(ttk.Frame):
         self.btn_valider.grid(row=2, column=2, padx=5)
         self._update_state()
 
-    def _update_state(self, *args):
+    def _update_state(self, *_args):
         state = "normal" if self.app.show_param_nv.get() else "disabled"
         self.ent_scale.config(state=state)
         self.ent_offset.config(state=state)
@@ -57,14 +58,13 @@ class BarreCorrectFrameNv(ttk.Frame):
             if scale <= 0:
                 scale = 0.001
             orig = self.app.my_granulos.originale.granulo
-            prat = self.app.my_granulos.prat.granulo
             # Mise à jour de la courbe numérique
             self.app.my_granulos.num.granulo["x_axis"] = correct(
                 orig["x_axis"], scale, offset
             )
             # Recalcul de l'erreur
             _update_global_error(self.app)
-            self.graphe._maj_cumuls()
+            self.graphe._maj_cumuls()  # pylint: disable=protected-access
         except ValueError:
             messagebox.showwarning(
                 "Format invalide",
@@ -121,7 +121,7 @@ class CorrectFrame(ttk.Frame):
         # Traces pour l'état des boutons
         self.app.flag_affiche_erreur.trace_add("write", self._toggle_buttons)
 
-    def _toggle_buttons(self, *args):
+    def _toggle_buttons(self, *_args):
         state = "normal" if self.app.flag_affiche_erreur.get() else "disabled"
         self.btn_auto.config(state=state)
         self.btn_save.config(state=state)
@@ -157,8 +157,8 @@ class CorrectFrame(ttk.Frame):
             self.app.my_granulos.num.granulo["x_axis"] = correct(orig["x_axis"], s, o)
             # Recalcul erreur
             _update_global_error(self.app)
-            self.graphe._maj_cumuls()
-        except Exception as e:
+            self.graphe._maj_cumuls()  # pylint: disable=protected-access
+        except Exception as e:  # pylint: disable=broad-exception-caught
             messagebox.showerror(
                 "Échec de l'optimisation",
                 f"L'algorithme de calcul n'a pas pu faire converger "
@@ -194,9 +194,9 @@ class CorrectFrame(ttk.Frame):
                 f" |  Offset: {offset_val}",
                 foreground="#FFFFFF",
             )
-        except Exception as e:
+        except Exception:  # pylint: disable=broad-exception-caught
             self.lbl_save_info.config(
-                text=f"Erreur de sauvegarde", foreground="#E74C3C"
+                text="Erreur de sauvegarde", foreground="#E74C3C"
             )
 
     def _load_saved_params(self):
@@ -214,7 +214,7 @@ class CorrectFrame(ttk.Frame):
                     text=
                     f"Derniers paramètres sauvegardés:\nScale: {scale_val}"
                     f"  |  Offset: {offset_val}",
-                    foreground="#FFFFFF",  
+                    foreground="#FFFFFF",
                 )
-            except Exception:
+            except Exception:  # pylint: disable=broad-exception-caught
                 pass

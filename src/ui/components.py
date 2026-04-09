@@ -1,14 +1,14 @@
 """Module de définition des composants graphiques 
 pour l'application de réglage de paramètres granulométriques."""
 
-import os
+# pylint: disable=too-many-ancestors
+
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 import pandas as pd
 import numpy as np
-from scipy.optimize import minimize
-from src.core.engine import correct, inv_correct, calc_erreur, erreur_minim
-from src.utils.importers import info_extract_courbe_numerique, importer_image_tk
+from src.core.engine import inv_correct, calc_erreur  # pylint: disable=import-error
+from src.utils.importers import info_extract_courbe_numerique, importer_image_tk  # pylint: disable=import-error
 
 PARAM_FILE_PATH = "mesure/params_correction.txt"
 
@@ -55,7 +55,7 @@ class UneCourbeAffiche(tk.Frame):
         self.label_check.pack(side="left", padx=5, expand=True, fill="x")
         self.check.pack(side="right", padx=5)
 
-    def affiche_elt_courbe(self, *args):
+    def affiche_elt_courbe(self, *_args):
         """Active ou désactive les éléments de la courbe selon l'état de la case à cocher"""
         etat = "normal" if self.un_cumul.show_courbe_elt.get() else "disabled"
         self.color_square.config(state=etat)
@@ -64,7 +64,7 @@ class UneCourbeAffiche(tk.Frame):
 
     def maj_cumul(self):
         """Met à jour les cumulatives dans le graphe lorsque l'affichage est modifié"""
-        self.graphe._maj_cumuls()
+        self.graphe._maj_cumuls()  # pylint: disable=protected-access
 
 
 class ImportGranuloFrame(ttk.Frame):
@@ -77,9 +77,9 @@ class ImportGranuloFrame(ttk.Frame):
         # le fond de la frame d'import à blanc
         self.config(style="Sidebar.TFrame")
         self.tk_img_dl = importer_image_tk("logodownload.png")
-        self._setup()
+        self._setup_ui()
 
-    def _setup(self):
+    def _setup_ui(self):
         logo_ref = (
             self.app.my_granulos.num.logo
             if self.type == "num"
@@ -126,7 +126,7 @@ class ImportGranuloFrame(ttk.Frame):
                     self.app.my_granulos.originale.show_courbe_elt.set(True)
                     self.app.show_param_nv.set(True)
                     self.app.flag_affiche_btn_sauvegarde.set(True)
-                except Exception as e:
+                except Exception as e:  # pylint: disable=broad-exception-caught
                     messagebox.showerror(
                         "Erreur d'import",
                         f"Le fichier ZIP sélectionné est invalide ou illisible.\n\nDétails : {e}",
@@ -142,7 +142,7 @@ class ImportGranuloFrame(ttk.Frame):
                         "y_axis": df.iloc[:, 1].tolist(),
                     }
                     self.app.my_granulos.prat.show_courbe_elt.set(True)
-                except Exception as e:
+                except Exception as e:  # pylint: disable=broad-exception-caught
                     messagebox.showerror(
                         "Erreur d'import",
                         f"Impossible de lire ce fichier Excel."
@@ -150,4 +150,4 @@ class ImportGranuloFrame(ttk.Frame):
                     )
                     return
         _update_global_error(self.app)
-        self.graphe._maj_cumuls()
+        self.graphe._maj_cumuls()  # pylint: disable=protected-access

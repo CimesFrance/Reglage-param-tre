@@ -1,6 +1,8 @@
 """Module gerant la fenetre principale de l'application de
 réglage de paramètres granulométriques."""
 
+# pylint: disable=import-error,too-many-ancestors
+
 import os
 import tkinter as tk
 from tkinter import ttk
@@ -37,7 +39,7 @@ class CIMESApp(tk.Tk):
         # Graph
         self.graph_view = Graphe(self, self.state)
         self.graph_view.pack(side="right", fill="both", expand=True)
-        self.logo_entreprise_side = importer_image_tk("cimes-logo.png", w=250, h=100)
+        self.logo_entreprise_side = importer_image_tk("cimes-logo.png", width=250, height=100)
         if self.logo_entreprise_side:
             lbl_logo = tk.Label(
                 sidebar,
