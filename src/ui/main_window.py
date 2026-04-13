@@ -25,6 +25,7 @@ class CIMESApp(tk.Tk):
             default=os.path.join(os.getcwd(), "assets/icons/cimes-logo.ico"),
         )
         self.geometry("1100x800")
+        self.minsize(1300, 900)
         self.state = AppState()
         self.style_manager = StyleManager(self)
         self._build_layout()

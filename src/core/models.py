@@ -17,7 +17,7 @@ class Cumul:
         self.color = color
         self.granulo = granulo
         self.logo = logo
-        self.flag_affichage = tk.IntVar(value=0)
+        self.flag_affichage = tk.IntVar(value=1)
         self.show_courbe_elt = tk.BooleanVar(value=False)
 
 
