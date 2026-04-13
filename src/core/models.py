@@ -17,7 +17,11 @@ class Cumul:
         self.color = color
         self.granulo = granulo
         self.logo = logo
+        # Par défaut à 1 : la courbe est affichée dès qu'elle est importée.
         self.flag_affichage = tk.IntVar(value=1)
+        # Contrôle si les widgets de la sidebar (case à cocher, label) sont
+        # cliquables ou grisés. False = grisé,
+        # True = actif.
         self.show_courbe_elt = tk.BooleanVar(value=False)
 
 
@@ -53,8 +57,14 @@ class AppState:
                 "offset": tk.StringVar(value="0.00"),
             },
         }
+        # Valeur numérique de l'erreur affichée dans l'interface
         self.erreur = tk.StringVar(value="0.00")
+        # Active la section "paramètres actuels" dans la sidebar (après import ZIP)
         self.show_correct_frame_act = tk.BooleanVar(value=False)
+        # Devient True quand les deux courbes sont importées → déverrouille
+        # les boutons Auto-Ajuster et Sauvegarder
         self.flag_affiche_erreur = tk.BooleanVar(value=False)
+        # Active les champs Scale/Offset manuels (après import ZIP)
         self.show_param_nv = tk.BooleanVar(value=False)
+        # Déverrouille le bouton de sauvegarde quand les paramètres sont prêts
         self.flag_affiche_btn_sauvegarde = tk.BooleanVar(value=False)

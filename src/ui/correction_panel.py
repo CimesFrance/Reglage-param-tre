@@ -18,7 +18,8 @@ class BarreCorrectFrameNv(ttk.Frame):
         self.app = app
         self.graphe = graphe
         self.var_nv = app.var_correct["var_nv"]
-        # Trace pour activer/désactiver les champs
+        # trace_add : quand show_param_nv change (après un import ZIP),
+        # _update_state est appelé automatiquement pour activer/griser les champs.
         self.app.show_param_nv.trace_add("write", self._update_state)
         self._build_ui()
 
@@ -119,6 +120,8 @@ class CorrectFrame(ttk.Frame):
         # Charge les paramètres si existants
         self._load_saved_params()
         # Traces pour l'état des boutons
+        # trace_add : quand flag_affiche_erreur passe à True (les deux courbes
+        # sont importées), les boutons Auto-Ajuster et Sauvegarder se déverrouillent.
         self.app.flag_affiche_erreur.trace_add("write", self._toggle_buttons)
 
     def _toggle_buttons(self, *_args):
@@ -140,14 +143,16 @@ class CorrectFrame(ttk.Frame):
             return
         try:
             res = minimize(
-                erreur_minim,
-                [1.0, 0.0],
+                erreur_minim,   # Fonction à minimiser, calcule l'erreur pour un scale/offset
+                [1.0, 0.0],     # Point de départ : scale=1 (pas de changement), offset=0
                 args=(
                     np.array(orig["x_axis"]),
                     np.array(orig["y_axis"]),
                     np.array(prat["x_axis"]),
                     np.array(prat["y_axis"]),
                 ),
+                # bounds : scale doit rester > 0, un scale négatif inverserait la courbe
+                # offset peut prendre n'importe quelle valeur (None = pas de limite).
                 bounds=[(1e-6, None), (None, None)],
             )
             s, o = res.x
@@ -167,6 +172,10 @@ class CorrectFrame(ttk.Frame):
             )
 
     def _save_params(self):
+        """
+        Sauvegarde les paramètres actuels (Scale et Offset)
+        dans un fichier texte pour persistance entre les sessions.
+        """
         try:
             scale_val = self.app.var_correct["var_nv"]["scale"].get()
             offset_val = self.app.var_correct["var_nv"]["offset"].get()
@@ -200,6 +209,10 @@ class CorrectFrame(ttk.Frame):
             )
 
     def _load_saved_params(self):
+        """
+        Charge les derniers paramètres sauvegardés depuis le fichier texte
+        et met à jour l'interface utilisateur.
+        """
         if os.path.exists(PARAM_FILE_PATH):
             try:
                 with open(PARAM_FILE_PATH, "r", encoding="utf-8") as f:

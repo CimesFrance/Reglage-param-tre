@@ -34,6 +34,8 @@ class UneCourbeAffiche(tk.Frame):
         super().__init__(parent, bg=parent["bg"], *args, **kwargs)
         self.un_cumul = un_cumul
         self.graphe = graphe
+        # trace_add "write" : tkinter appelle automatiquement affiche_elt_courbe
+        # chaque fois que show_courbe_elt change de valeur (ex: après un import).
         self.un_cumul.show_courbe_elt.trace_add("write", self.affiche_elt_courbe)
         self._une_courbe_frame_gui()
 
@@ -57,6 +59,8 @@ class UneCourbeAffiche(tk.Frame):
 
     def affiche_elt_courbe(self, *_args):
         """Active ou désactive les éléments de la courbe selon l'état de la case à cocher"""
+        # *_args : tkinter passe des arguments internes lors du callback (nom, index, mode)
+        # On ne les utilise pas, donc on les ignore avec _args.
         etat = "normal" if self.un_cumul.show_courbe_elt.get() else "disabled"
         self.color_square.config(state=etat)
         self.label_check.config(state=etat)
