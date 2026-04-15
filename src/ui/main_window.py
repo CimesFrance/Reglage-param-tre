@@ -59,7 +59,7 @@ class CIMESApp(tk.Tk):
         ImportGranuloFrame(sidebar, self.state, self.graph_view, "tamis").pack(
             fill="x", pady=5
         )
-        tk.Frame(sidebar, height=1, bg="#34495E").pack(fill="x", pady=15)
+        tk.Frame(sidebar, height=1, bg="#34495E").pack(fill="x", pady=25)
         # Gestion des courbes
         ttk.Label(
             sidebar, text="Gestion des Courbes", style="Sidebar.Title.TLabel"
@@ -73,6 +73,6 @@ class CIMESApp(tk.Tk):
         UneCourbeAffiche(sidebar, self.state.my_granulos.prat, self.graph_view).pack(
             fill="x"
         )
-        tk.Frame(sidebar, height=1, bg="#34495E").pack(fill="x", pady=15)
+        tk.Frame(sidebar, height=1, bg="#34495E").pack(fill="x", pady=25)
         # Correction
         CorrectFrame(sidebar, self.state, self.graph_view).pack(fill="x")

@@ -1,7 +1,6 @@
 """Module contenant les composants liés à l'interface de correction des paramètres."""
 
 # pylint: disable=too-many-ancestors
-
 import os
 from tkinter import ttk, messagebox
 import numpy as np
@@ -26,23 +25,24 @@ class BarreCorrectFrameNv(ttk.Frame):
     def _build_ui(self):
         ttk.Label(
             self,
-            text="Paramètres manuels",
-            style="Sidebar.TLabel",
-            font=("Segoe UI", 10, "bold"),
-        ).grid(row=0, column=0, columnspan=3, pady=(5, 10))
+            text="Correction Manuelle",
+            style="Sidebar.Title.TLabel",
+        ).pack(pady=(5, 10))
+        content_f = ttk.Frame(self, style="Sidebar.TFrame")
+        content_f.pack()
         # Scale
-        ttk.Label(self, text="Scale:", style="Sidebar.TLabel").grid(row=1, column=0)
-        self.ent_scale = ttk.Entry(self, textvariable=self.var_nv["scale"], width=8)
-        self.ent_scale.grid(row=2, column=0, padx=5)
+        ttk.Label(content_f, text="Scale:", style="Sidebar.TLabel").grid(row=0, column=0)
+        self.ent_scale = ttk.Entry(content_f, textvariable=self.var_nv["scale"], width=8)
+        self.ent_scale.grid(row=1, column=0, padx=5)
         # Offset
-        ttk.Label(self, text="Offset:", style="Sidebar.TLabel").grid(row=1, column=1)
-        self.ent_offset = ttk.Entry(self, textvariable=self.var_nv["offset"], width=8)
-        self.ent_offset.grid(row=2, column=1, padx=5)
+        ttk.Label(content_f, text="Offset:", style="Sidebar.TLabel").grid(row=0, column=1)
+        self.ent_offset = ttk.Entry(content_f, textvariable=self.var_nv["offset"], width=8)
+        self.ent_offset.grid(row=1, column=1, padx=5)
         # Bouton Valider
         self.btn_valider = ttk.Button(
-            self, text="Appliquer", command=self._validate_change
+            content_f, text="Appliquer", command=self._validate_change
         )
-        self.btn_valider.grid(row=2, column=2, padx=5)
+        self.btn_valider.grid(row=1, column=2, padx=5)
         self._update_state()
 
     def _update_state(self, *_args):
@@ -85,23 +85,16 @@ class CorrectFrame(ttk.Frame):
         self._build_ui()
 
     def _build_ui(self):
-        ttk.Label(self, text="Correction", style="Sidebar.Title.TLabel").pack(
+        ttk.Label(self, text="Correction Automatique", style="Sidebar.Title.TLabel").pack(
             pady=(0, 10)
         )
         # Section Erreur et Auto
         auto_f = ttk.Frame(self, style="Sidebar.TFrame")
         auto_f.pack(fill="x", pady=5)
-        ttk.Label(auto_f, text="Erreur :", style="Sidebar.TLabel").pack(side="left")
-        ttk.Label(
-            auto_f,
-            textvariable=self.app.erreur,
-            style="Sidebar.TLabel",
-            font=("Segoe UI", 10, "bold"),
-        ).pack(side="left", padx=5)
         self.btn_auto = ttk.Button(auto_f, text="Auto-Ajuster", command=self._auto)
-        self.btn_auto.pack(side="right")
+        self.btn_auto.pack(fill="x", expand=True)
         # Séparateur
-        ttk.Separator(self, orient="horizontal").pack(fill="x", pady=10)
+        ttk.Separator(self, orient="horizontal").pack(fill="x", pady=25)
         # Section Manuelle
         self.manual_f = BarreCorrectFrameNv(self, self.app, self.graphe)
         self.manual_f.pack(fill="x")
@@ -114,9 +107,13 @@ class CorrectFrame(ttk.Frame):
 
         # Label confirmation sauvegarde
         self.lbl_save_info = ttk.Label(
-            self, text="", style="Sidebar.TLabel", justify="center"
+            self, 
+            text="", 
+            style="Sidebar.TLabel", 
+            justify="center",
+            font=("Segoe UI", 12, "bold")
         )
-        self.lbl_save_info.pack(pady=5)
+        self.lbl_save_info.pack(pady=(10, 5))
         # Charge les paramètres si existants
         self._load_saved_params()
         # Traces pour l'état des boutons
@@ -172,10 +169,8 @@ class CorrectFrame(ttk.Frame):
             )
 
     def _save_params(self):
-        """
-        Sauvegarde les paramètres actuels (Scale et Offset)
-        dans un fichier texte pour persistance entre les sessions.
-        """
+        """Sauvegarde les paramètres actuels (Scale et Offset)
+        dans un fichier texte pour persistance entre les sessions."""
         try:
             scale_val = self.app.var_correct["var_nv"]["scale"].get()
             offset_val = self.app.var_correct["var_nv"]["offset"].get()
@@ -191,12 +186,9 @@ class CorrectFrame(ttk.Frame):
                     parent=self,
                 )
                 return
-
             os.makedirs(os.path.dirname(PARAM_FILE_PATH), exist_ok=True)
-
             with open(PARAM_FILE_PATH, "w", encoding="utf-8") as f:
                 f.write(f"Scale = {scale_val}\nOffset = {offset_val}\n")
-
             self.lbl_save_info.config(
                 text=
                 f"Nouveaux paramètres sauvegardés\nScale: {scale_val} "
@@ -209,10 +201,8 @@ class CorrectFrame(ttk.Frame):
             )
 
     def _load_saved_params(self):
-        """
-        Charge les derniers paramètres sauvegardés depuis le fichier texte
-        et met à jour l'interface utilisateur.
-        """
+        """Charge les derniers paramètres sauvegardés depuis le fichier texte
+        et met à jour l'interface utilisateur."""
         if os.path.exists(PARAM_FILE_PATH):
             try:
                 with open(PARAM_FILE_PATH, "r", encoding="utf-8") as f:
