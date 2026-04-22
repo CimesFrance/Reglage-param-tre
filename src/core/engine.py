@@ -32,9 +32,9 @@ def calc_erreur(tamis_corrigee, cumulatif_corrigee, tamis_pratique, cumulatif_pr
     )
     y_corr_interp = corr_interp(xfine)
     dy = y_corr_interp - y_exp_interp
-    # Erreur de type MSE:
-    # plus la valeur est proche de 0, plus les courbes se superposent.
-    return round(np.sum(dy**2) / 300, 3)
+    # Erreur de type RMSE (Root Mean Square Error):
+    # La racine de la moyenne des carrés permet d'avoir une erreur en %.
+    return round(np.sqrt(np.sum(dy**2) / 300), 3)
 
 
 def erreur_minim(
