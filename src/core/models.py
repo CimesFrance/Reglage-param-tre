@@ -6,7 +6,7 @@ sur les cumuls granulométriques, ainsi que l'état global de l'application."""
 # pylint: disable=too-few-public-methods
 
 import tkinter as tk
-from src.utils.importers import importer_image_tk  # pylint: disable=import-error
+from modules.app_change_corr_params.src.utils.importers import importer_image_tk  # pylint: disable=import-error
 
 
 class Cumul:

@@ -6,24 +6,26 @@ réglage de paramètres granulométriques."""
 import os
 import tkinter as tk
 from tkinter import ttk
-from src.ui.styles import StyleManager
-from src.ui.graph import Graphe
-from src.ui.components import ImportGranuloFrame, UneCourbeAffiche
-from src.ui.correction_panel import CorrectFrame
-from src.core.models import AppState
-from src.utils.importers import importer_image_tk
+from modules.app_change_corr_params.src.ui.styles import StyleManager
+from modules.app_change_corr_params.src.ui.graph import Graphe
+from modules.app_change_corr_params.src.ui.components import ImportGranuloFrame, UneCourbeAffiche
+from modules.app_change_corr_params.src.ui.correction_panel import CorrectFrame
+from modules.app_change_corr_params.src.core.models import AppState
+from modules.app_change_corr_params.src.utils.importers import importer_image_tk
 
 
 class CIMESApp(tk.Tk):
     """Creation de  la fenetre principale."""
 
-    def __init__(self):
+    def __init__(self, parent=None):
         super().__init__()
         self.title("  Correction Granulométrique")
-        self.iconbitmap(
-            "../assets/icons/cimes-logo.ico",
-            default=os.path.join(os.getcwd(), "assets/icons/cimes-logo.ico"),
-        )
+        import os
+        icon_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "assets", "icons", "cimes-logo.ico")
+        try:
+            self.iconbitmap(icon_path, default=icon_path)
+        except Exception:
+            pass
         self.geometry("1100x800")
         self.minsize(1300, 900)
         self.state = AppState()
@@ -61,8 +63,7 @@ class CIMESApp(tk.Tk):
         )
         tk.Frame(sidebar, height=1, bg="#34495E").pack(fill="x", pady=15)
         # Gestion des courbes
-        ttk.Label(
-            sidebar, text="Gestion des Courbes", style="Sidebar.Title.TLabel"
+        ttk.Label(sidebar, text="Gestion des Courbes", style="Sidebar.Title.TLabel"
         ).pack(pady=(0, 10))
         UneCourbeAffiche(sidebar, self.state.my_granulos.num, self.graph_view).pack(
             fill="x"
