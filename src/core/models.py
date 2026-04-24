@@ -58,7 +58,7 @@ class AppState:
             },
         }
         # Valeur numérique de l'erreur affichée dans l'interface
-        self.erreur = tk.StringVar(value="0.00 %")
+        self.erreur = tk.StringVar(value="0.00")
         # Active la section "paramètres actuels" dans la sidebar (après import ZIP)
         self.show_correct_frame_act = tk.BooleanVar(value=False)
         # Devient True quand les deux courbes sont importées → déverrouille

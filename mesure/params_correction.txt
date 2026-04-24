@@ -1,2 +1,2 @@
-Scale = 43.318
-Offset = -1268.215
+Scale = 0.335
+Offset = 23.614

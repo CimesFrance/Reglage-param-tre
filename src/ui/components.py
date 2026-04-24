@@ -22,7 +22,7 @@ def _update_global_error(app):
             np.array(app.my_granulos.prat.granulo["x_axis"]),
             np.array(app.my_granulos.prat.granulo["y_axis"]),
         )
-        app.erreur.set(f"{err} %")
+        app.erreur.set(str(err))
         app.flag_affiche_erreur.set(True)
 
 
