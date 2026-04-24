@@ -7,8 +7,8 @@ import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 import pandas as pd
 import numpy as np
-from src.core.engine import inv_correct, calc_erreur  # pylint: disable=import-error
-from src.utils.importers import info_extract_courbe_numerique, importer_image_tk  # pylint: disable=import-error
+from modules.app_change_corr_params.src.core.engine import inv_correct, calc_erreur  # pylint: disable=import-error
+from modules.app_change_corr_params.src.utils.importers import info_extract_courbe_numerique, importer_image_tk  # pylint: disable=import-error
 
 PARAM_FILE_PATH = "mesure/params_correction.txt"
 
@@ -43,8 +43,7 @@ class UneCourbeAffiche(tk.Frame):
         self.color_square = tk.Label(
             self, bg=self.un_cumul.color, width=2, relief="flat", state="disabled"
         )
-        self.label_check = ttk.Label(
-            self, text=self.un_cumul.name, style="Sidebar.TLabel", state="disabled"
+        self.label_check = ttk.Label(self, text=self.un_cumul.name, style="Sidebar.TLabel", state="disabled"
         )
         self.check = ttk.Checkbutton(
             self,
@@ -102,8 +101,7 @@ class ImportGranuloFrame(ttk.Frame):
         ttk.Label(self, text=txt, style="Sidebar.TLabel").grid(
             row=0, column=1, sticky="w"
         )
-        ttk.Button(
-            self, image=self.tk_img_dl, command=self._import, style="Icon.TButton"
+        ttk.Button(self, image=self.tk_img_dl, command=self._import, style="Icon.TButton"
         ).grid(row=0, column=2, padx=5, sticky="e")
 
     def _import(self):

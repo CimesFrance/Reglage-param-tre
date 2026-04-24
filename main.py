@@ -1,6 +1,12 @@
 """Main entry point for the CIMES application."""
 
-from src.ui.main_window import CIMESApp
+import sys
+import os
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+
+from modules.app_change_corr_params.src.ui.main_window import CIMESApp
+
+import tkinter as tk
 
 if __name__ == "__main__":
     app = CIMESApp()
