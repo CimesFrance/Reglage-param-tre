@@ -21,7 +21,8 @@ class CIMESApp(tk.Tk):
         super().__init__()
         self.title("  Correction Granulométrique")
         import os
-        icon_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "assets", "icons", "cimes-logo.ico")
+        from src.utils.file_manager import get_project_root
+        icon_path = os.path.join(get_project_root(), "modules", "app_change_corr_params", "assets", "icons", "cimes-logo.ico")
         try:
             self.iconbitmap(icon_path, default=icon_path)
         except Exception:

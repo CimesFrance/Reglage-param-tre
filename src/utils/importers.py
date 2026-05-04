@@ -9,9 +9,8 @@ from PIL import Image, ImageTk
 
 def importer_image_tk(nom_image, width=24, height=24):
     """Charge une image depuis le dossier assets et la convertit en PhotoImage pour Tkinter."""
-    base_path = os.path.dirname(
-        os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    )
+    from src.utils.file_manager import get_project_root
+    base_path = os.path.join(get_project_root(), "modules", "app_change_corr_params")
     path = os.path.join(base_path, "assets", "icons", nom_image)
     try:
         img = Image.open(path).resize((width, height), Image.Resampling.LANCZOS)
