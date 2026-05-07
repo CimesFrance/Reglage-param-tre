@@ -12,6 +12,7 @@ from modules.app_change_corr_params.src.ui.components import ImportGranuloFrame,
 from modules.app_change_corr_params.src.ui.correction_panel import CorrectFrame
 from modules.app_change_corr_params.src.core.models import AppState
 from modules.app_change_corr_params.src.utils.importers import importer_image_tk
+from src.utils.file_manager import get_project_root
 
 
 class CIMESApp(tk.Tk):
@@ -19,9 +20,7 @@ class CIMESApp(tk.Tk):
 
     def __init__(self, parent=None):
         super().__init__()
-        self.title("  Correction Granulométrique")
-        import os
-        from src.utils.file_manager import get_project_root
+        self.title("Cimes")
         icon_path = os.path.join(get_project_root(), "modules", "app_change_corr_params", "assets", "icons", "cimes-logo.ico")
         try:
             self.iconbitmap(icon_path, default=icon_path)
